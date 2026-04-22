@@ -1,0 +1,189 @@
+# =========================
+
+# Build Results
+
+# =========================
+
+bin/
+obj/
+out/
+publish/
+
+# =========================
+
+# Visual Studio
+
+# =========================
+
+.vs/
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+
+# =========================
+
+# Rider / VSCode
+
+# =========================
+
+.idea/
+.vscode/
+
+# =========================
+
+# Logs
+
+# =========================
+
+*.log
+
+# =========================
+
+# OS generated files
+
+# =========================
+
+.DS_Store
+Thumbs.db
+
+# =========================
+
+# NuGet
+
+# =========================
+
+*.nupkg
+*.snupkg
+packages/
+.nuget/
+project.lock.json
+project.fragment.lock.json
+artifacts/
+
+# =========================
+
+# Test Results
+
+# =========================
+
+TestResults/
+*.trx
+*.coverage
+*.coveragexml
+
+# =========================
+
+# Entity Framework
+
+# =========================
+
+*.db
+*.db-shm
+*.db-wal
+
+# =========================
+
+# Publish
+
+# =========================
+
+*.Publish.xml
+*.pubxml
+*.publishproj
+
+# =========================
+
+# Secrets
+
+# =========================
+
+secrets.json
+appsettings.Development.json
+
+# =========================
+
+# Temporary files
+
+# =========================
+
+*.tmp
+*.temp
+
+# =========================
+
+# Generated files
+
+# =========================
+
+Generated_Code/
+
+# =========================
+
+# dotnet watch
+
+# =========================
+
+.dotnet/
+
+# =========================
+
+# Node (if frontend inside project)
+
+# =========================
+
+node_modules/
+npm-debug.log
+yarn-error.log
+
+
+# Compiled output
+/tmp
+/out-tsc
+/bazel-out
+
+# Node
+/node_modules
+npm-debug.log
+yarn-error.log
+
+# IDEs and editors
+.idea/
+.project
+.classpath
+.c9/
+*.launch
+.settings/
+*.sublime-workspace
+
+# Visual Studio Code
+.vscode
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+.history/*
+
+# Miscellaneous
+/.angular/cache
+.sass-cache/
+/connect.lock
+/coverage
+/libpeerconnection.log
+testem.log
+/typings
+
+# System files
+.DS_Store
+Thumbs.db
+.idea
+.angular
+
+# Others
+/.firebase
+/dist
+firebase.json
+.firebaserc
+package-lock.json
+.env
