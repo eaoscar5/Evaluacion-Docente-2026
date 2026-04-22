@@ -1,0 +1,151 @@
+<div class="alumno-root">
+
+  <!-- ── Modal de bienvenida ──────────────────────────────────── -->
+  <div class="modal-overlay" *ngIf="mostrarModal" (click)="cerrarModal()">
+    <div class="modal-bienvenida" (click)="$event.stopPropagation()">
+      <div class="modal-icon">
+        <i class="bi bi-mortarboard-fill"></i>
+      </div>
+      <h2>¡Bienvenido al Sistema de<br>Evaluación Docente!</h2>
+      <p>
+        Este sistema te permite evaluar a tus profesores de forma anónima.
+        Tu opinión es muy importante para mejorar la calidad de la enseñanza
+        en nuestra universidad.
+      </p>
+      <button class="btn-entrar" (click)="cerrarModal()">
+        <i class="bi bi-arrow-right-circle me-2"></i> Entrar
+      </button>
+    </div>
+  </div>
+
+  <!-- ── Header ─────────────────────────────────────────────── -->
+  <header class="alumno-header">
+    <div class="header-brand">
+      <img src="assets/images/logos/utslogo.png" alt="UTS" class="header-logo" />
+    </div>
+    <a class="btn-salir" href="/logout">
+      <i class="bi bi-box-arrow-right"></i> Salir
+    </a>
+  </header>
+
+  <main class="alumno-main">
+
+    <!-- ── Perfil ──────────────────────────────────────────────── -->
+    <div class="perfil-card">
+      <div class="perfil-avatar">
+        <i class="bi bi-person-circle"></i>
+      </div>
+      <div class="perfil-info">
+        <h2 class="perfil-nombre">{{ sesion?.nombre ?? sesion?.username }}</h2>
+        <span class="perfil-matricula">
+          <i class="bi bi-person-badge me-1"></i>{{ sesion?.username }}
+        </span>
+      </div>
+      <!-- Progreso global -->
+      <div class="perfil-progreso" *ngIf="!loading && totalEvaluaciones > 0">
+        <span class="progreso-texto">{{ totalEvaluadas }}/{{ totalEvaluaciones }} evaluados</span>
+        <div class="progreso-bar">
+          <div class="progreso-fill"
+            [style.width.%]="(totalEvaluadas / totalEvaluaciones) * 100">
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── Cargando ──────────────────────────────────────────── -->
+    <div class="estado-cargando" *ngIf="loading">
+      <div class="spinner-ring"></div>
+      <p>Cargando evaluaciones…</p>
+    </div>
+
+    <!-- ── Error / Sin proceso ───────────────────────────────── -->
+    <div class="estado-vacio" *ngIf="!loading && errorMsg">
+      <div class="vacio-icon"><i class="bi bi-calendar-x"></i></div>
+      <h3>Sin periodo activo</h3>
+      <p>{{ errorMsg }}</p>
+    </div>
+
+    <!-- ── Panel de evaluaciones ───────────────────────────────── -->
+    <div class="evaluaciones-panel" *ngIf="!loading && !errorMsg">
+
+      <div class="panel-header">
+        <h3 class="panel-titulo">Evaluación de Profesores</h3>
+        <span class="panel-contador">
+          {{ totalEvaluadas }}/{{ totalEvaluaciones }}
+          <span class="text-muted"> evaluados</span>
+        </span>
+      </div>
+
+      <!-- Buscador -->
+      <div class="buscador-wrapper">
+        <i class="bi bi-search buscador-icon"></i>
+        <input
+          class="buscador-input"
+          type="text"
+          placeholder="Buscar profesor o materia…"
+          [(ngModel)]="busqueda"
+          (ngModelChange)="filtrar()">
+      </div>
+
+      <!-- Sin resultados -->
+      <div class="sin-resultados" *ngIf="evaluacionesFiltradas.length === 0 && busqueda">
+        <i class="bi bi-search"></i>
+        <p>Sin resultados para "<strong>{{ busqueda }}</strong>"</p>
+      </div>
+
+      <!-- Tabla -->
+      <div class="tabla-wrapper" *ngIf="evaluacionesFiltradas.length > 0">
+        <div class="tabla-header">
+          <span>PROFESOR</span>
+          <span>MATERIA</span>
+          <span class="text-center">ESTADO</span>
+        </div>
+
+        <div
+          class="tabla-fila"
+          *ngFor="let e of evaluacionesFiltradas"
+          [class.fila-evaluada]="e.yaEvaluado"
+          [class.fila-pendiente]="!e.yaEvaluado"
+          (click)="irAEvaluar(e)"
+          [attr.role]="e.yaEvaluado ? null : 'button'"
+          [attr.tabindex]="e.yaEvaluado ? null : 0"
+          (keydown.enter)="irAEvaluar(e)">
+
+          <div class="fila-maestro">
+            <div class="maestro-avatar" [class.avatar-evaluado]="e.yaEvaluado">
+              {{ e.nombreMaestro.charAt(0) }}
+            </div>
+            <div>
+              <span class="maestro-nombre">{{ e.nombreMaestro | titlecase }}</span>
+              <span class="maestro-grupo">Grupo {{ e.grupo }}</span>
+            </div>
+          </div>
+
+          <div class="fila-materia">{{ e.materia }}</div>
+
+          <div class="fila-accion">
+            <!-- Ya evaluado -->
+            <span class="badge-evaluado" *ngIf="e.yaEvaluado">
+              <i class="bi bi-check-circle-fill me-1"></i> Evaluado
+            </span>
+            <!-- Pendiente -->
+            <span class="btn-evaluar" *ngIf="!e.yaEvaluado">
+              <i class="bi bi-clipboard-check me-1"></i> Evaluar
+            </span>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- Todas completadas -->
+      <div class="estado-completo" *ngIf="todasCompletadas && !busqueda">
+        <div class="completo-icon"><i class="bi bi-patch-check-fill"></i></div>
+        <h3>¡Evaluaciones completadas!</h3>
+        <p>Has evaluado a todos tus profesores del periodo actual.</p>
+      </div>
+
+    </div>
+
+  </main>
+
+</div>

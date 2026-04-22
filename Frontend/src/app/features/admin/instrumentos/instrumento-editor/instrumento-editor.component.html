@@ -1,0 +1,188 @@
+<div class="editor-root">
+
+  <!-- ════════════════════════════════════════
+       ESTADO: CARGANDO
+  ════════════════════════════════════════ -->
+  @if (cargando()) {
+    <div class="estado-overlay">
+      <mat-spinner diameter="48"></mat-spinner>
+      <p>Cargando instrumento…</p>
+    </div>
+  }
+
+  @if (!cargando()) {
+
+    <!-- ── Encabezado ── -->
+    <div class="editor-header">
+      <div class="header-left">
+        <button mat-icon-button class="btn-back" routerLink="/instrumentos" matTooltip="Volver a la lista">
+          <mat-icon>arrow_back</mat-icon>
+        </button>
+        <div>
+          <h1 class="editor-titulo">
+            {{ modoEdicion() ? 'Editar Instrumento' : 'Nuevo Instrumento' }}
+          </h1>
+          @if (modoEdicion()) {
+            <span class="editor-id">ID #{{ instrumento.id }}</span>
+          }
+        </div>
+      </div>
+
+      <div class="header-right">
+        @if (instrumento.esPlantilla) {
+          <span class="plantilla-chip">
+            <mat-icon>bookmark</mat-icon> Plantilla
+          </span>
+        }
+      </div>
+    </div>
+
+    <!-- ── Error global ── -->
+    @if (errorMsg()) {
+      <div class="error-banner" role="alert">
+        <mat-icon>error_outline</mat-icon>
+        <span>{{ errorMsg() }}</span>
+        <button mat-icon-button class="btn-close-error" (click)="errorMsg.set(null)">
+          <mat-icon>close</mat-icon>
+        </button>
+      </div>
+    }
+
+    <!-- ── Datos generales ── -->
+    <section class="seccion">
+      <h2 class="seccion-titulo">
+        <mat-icon>info_outline</mat-icon> Datos generales
+      </h2>
+
+      <div class="campos-grid">
+
+        <!-- Selector de plantilla (solo en modo creación) -->
+        @if (!modoEdicion()) {
+          <mat-form-field appearance="outline" class="campo-plantilla">
+            <mat-label>Usar plantilla</mat-label>
+            <mat-select
+              panelClass="instrumento-editor-select-panel"
+              [(ngModel)]="plantillaSeleccionadaId"
+              (selectionChange)="aplicarPlantilla($event.value)"
+              [disabled]="cargandoPlantilla() || !plantillasDisponibles.length">
+              <mat-option [value]="null">Sin plantilla</mat-option>
+              @for (inst of plantillasDisponibles; track inst.id) {
+                <mat-option [value]="inst.id">{{ inst.nombre }}</mat-option>
+              }
+            </mat-select>
+            @if (cargandoPlantilla()) {
+              <mat-hint>Cargando plantillas...</mat-hint>
+            } @else if (!plantillasDisponibles.length) {
+              <mat-hint>No hay instrumentos disponibles.</mat-hint>
+            }
+          </mat-form-field>
+        }
+
+        <!-- Nombre -->
+        <mat-form-field appearance="outline" class="campo-nombre">
+          <mat-label>Nombre del instrumento</mat-label>
+          <input
+            matInput
+            [(ngModel)]="instrumento.nombre"
+            placeholder="Ej. Evaluación de desempeño docente"
+          />
+          @if (!instrumento.nombre.trim()) {
+            <mat-hint>Obligatorio</mat-hint>
+          }
+        </mat-form-field>
+
+        <!-- Tipo -->
+        <mat-form-field appearance="outline" class="campo-tipo">
+          <mat-label>Tipo de instrumento</mat-label>
+          <mat-select
+            panelClass="instrumento-editor-select-panel"
+            [(ngModel)]="instrumento.tipoInstrumento">
+            @for (opt of tipoInstrumentoOptions; track opt.value) {
+              <mat-option [value]="opt.value">{{ opt.label }}</mat-option>
+            }
+          </mat-select>
+        </mat-form-field>
+
+        <!-- Campo "Periodo asignado" eliminado
+             El proceso se asigna desde la gestión de Procesos, no aquí -->
+
+      </div>
+
+      <div class="toggles-row">
+        <mat-slide-toggle
+          [(ngModel)]="instrumento.esPlantilla"
+          class="toggle-accent"
+          matTooltip="Marcar como plantilla permite usarlo como base al crear otros instrumentos">
+          <mat-icon class="toggle-icon">bookmark_border</mat-icon>
+          Usar como plantilla
+        </mat-slide-toggle>
+      </div>
+    </section>
+
+    <!-- ── Categorías ── -->
+    <section class="seccion">
+
+      <div class="seccion-header">
+        <h2 class="seccion-titulo">
+          <mat-icon>category</mat-icon>
+          Categorías
+          <span class="conteo-badge">{{ categorias.length }}</span>
+        </h2>
+
+        <button class="btn-agregar" (click)="agregarCategoria()">
+          <mat-icon>add</mat-icon> Agregar categoría
+        </button>
+      </div>
+
+      <div
+        cdkDropList
+        [cdkDropListData]="categorias"
+        (cdkDropListDropped)="dropCategoria($event)"
+        class="categorias-list"
+      >
+        @for (cat of categorias; let i = $index; track trackCategoria(i, cat)) {
+          <div cdkDrag class="categoria-drag-item">
+            <div *cdkDragPlaceholder class="drag-placeholder-cat"></div>
+            <app-categoria-card
+              [categoria]="cat"
+              (eliminar)="eliminarCategoria(i)">
+            </app-categoria-card>
+          </div>
+        } @empty {
+          <div class="empty-categorias">
+            <mat-icon>folder_open</mat-icon>
+            <p>No hay categorías. Pulsa <strong>+ Agregar categoría</strong> para comenzar.</p>
+          </div>
+        }
+      </div>
+
+    </section>
+
+    <!-- ── Acciones finales ── -->
+    <div class="acciones-footer">
+
+      <button
+        class="btn-guardar"
+        (click)="guardar()"
+        [disabled]="guardando()">
+        @if (guardando()) {
+          <mat-spinner diameter="20" class="spinner-inline"></mat-spinner>
+          Guardando…
+        } @else {
+          <mat-icon>save</mat-icon>
+          {{ modoEdicion() ? 'Actualizar' : 'Crear instrumento' }}
+        }
+      </button>
+
+      <button
+        class="btn-cancelar"
+        routerLink="/instrumentos"
+        [disabled]="guardando()">
+        Cancelar
+      </button>
+
+    </div>
+
+  }
+
+</div>

@@ -1,0 +1,137 @@
+<div class="row mt-4">
+    <div class="col-12">
+        <div class="page-breadcrumb">
+            <div class="d-md-flex align-items-center">
+                <h3 class="page-title">Opciones</h3>
+                <div class="ms-auto">
+                    <nav aria-label="breadcrumb">
+                        <ol class="breadcrumb">
+                            <li class="breadcrumb-item" tabindex="0"><a href="javascript:void(0)">Componente</a></li>
+                            <li class="breadcrumb-item active">Opciones</li>
+                        </ol>
+                    </nav>
+                </div>
+            </div>
+        </div>
+
+        <br>
+
+        <div class="card">
+            <div class="card-body">
+                <h4 class="card-title">Gestión de Opciones</h4>
+
+                <hr>
+
+                <!-- Barra de búsqueda y botón de nueva opción -->
+                <div class="d-flex mb-3 mt-3">
+                    <input
+                        type="text"
+                        placeholder="Buscar..."
+                        class="form-control w-25"
+                        [(ngModel)]="searchTerm"
+                        (input)="onSearch()"
+                    />
+                    <button class="btn btn-info ms-auto" (click)="showDialog()">Nueva Opción</button>
+                </div>
+
+                <!-- Tabla de opciones -->
+                <div class="table-responsive">
+                    <table class="table align-middle text-nowrap">
+                        <thead>
+                            <tr>
+                                <th scope="col" class="text-center">#</th>
+                                <th scope="col">Opción</th>
+                                <th scope="col">Nivel</th>
+                                <th scope="col">Fecha de Creación</th>
+                                <th scope="col">Fecha de Actualización</th>
+                                <th scope="col">Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let result of results; let i = index">
+                                <td class="text-center">{{ i + 1 }}</td>
+                                <td>{{ result.opcion }}</td>
+                                <td>{{ result.nivel }}</td>
+                                <td>{{ result.createdAt }}</td>
+                                <td>{{ result.updatedAt }}</td>
+                                <td>
+                                    <button class="btn btn-primary btn-sm" (click)="editOpcion(result)">
+                                        Editar
+                                    </button>
+                                    &nbsp;
+                                    <button class="btn btn-danger btn-sm" (click)="confirmDelete(result)">
+                                        Eliminar
+                                    </button>
+                                </td>
+                            </tr>
+                            <tr *ngIf="results.length === 0">
+                                <td colspan="6" class="text-center">No se encontraron opciones</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal -->
+<div>
+    <p-toast position="top-center"></p-toast>
+    <p-dialog
+        *ngIf="visible"
+        [header]="isEditMode ? 'Editar Opción' : 'Nueva Opción'"
+        [(visible)]="visible"
+        [breakpoints]="{ '960px': '75vw' }"
+        [style]="{ width: '25vw' }"
+        [draggable]="false"
+        [resizable]="false"
+        (onHide)="hideDialog()">
+        <p-messages [(value)]="note" [enableService]="false"></p-messages>
+
+        <form [formGroup]="form" (submit)="submit()">
+            <div class="form-group">
+                <label for="opcion" class="col-lg-4 col-form-label fw-bold fs-5">
+                    Opción <i class="text-danger">*</i>
+                </label>
+                <input
+                    type="text"
+                    placeholder="Nombre de la opción"
+                    class="form-control"
+                    formControlName="opcion"
+                    id="opcion"
+                    name="opcion"
+                />
+                <small *ngIf="form.get('opcion')?.invalid && form.get('opcion')?.touched" class="text-danger">
+                    La opción es obligatoria.
+                </small>
+            </div>
+
+            <div class="form-group">
+                <label for="nivel" class="col-lg-4 col-form-label fw-bold fs-5">
+                    Nivel <i class="text-danger">*</i>
+                </label>
+                <input
+                    type="number"
+                    placeholder="Nivel de la opción"
+                    class="form-control"
+                    formControlName="nivel"
+                    id="nivel"
+                    name="nivel"
+                />
+                <small *ngIf="form.get('nivel')?.invalid && form.get('nivel')?.touched" class="text-danger">
+                    El nivel es obligatorio.
+                </small>
+            </div>
+
+            <hr />
+
+            <div class="justify-content-end d-flex">
+                <button type="submit" class="btn btn-success" [disabled]="form.invalid || loading">
+                    <span *ngIf="!loading">{{ isEditMode ? 'Actualizar' : 'Guardar' }}</span>
+                    <span *ngIf="loading">Por favor, espere...</span>
+                </button>
+            </div>
+        </form>
+    </p-dialog>
+</div>

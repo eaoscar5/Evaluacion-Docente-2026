@@ -1,0 +1,26 @@
+// Theme colors
+#main-wrapper {
+  &[data-layout="vertical"]{
+    /*This is for the logo bg*/
+    .topbar .top-navbar .navbar-header {
+      &[data-logobg="skin6"] {
+        background: $skin6;
+        .navbar-brand {
+          .dark-logo {
+            display: inline;
+            height: 80px;
+          }
+          .light-logo {
+            display: none;
+          }
+        }
+        .nav-toggler,
+        .topbartoggler {
+          color: $body-color;
+        }
+      }
+    }
+
+
+  }
+}

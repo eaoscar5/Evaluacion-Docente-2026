@@ -1,0 +1,9 @@
+.size-support {
+    max-width: 80px;
+}
+
+@media screen and (max-width: 768px) {
+    .size-support {
+        max-width: 60px;
+    }
+}

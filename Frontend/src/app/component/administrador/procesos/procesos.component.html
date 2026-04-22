@@ -1,0 +1,127 @@
+<div class="row mt-4">
+    <div class="col-12">
+        <div class="page-breadcrumb">
+            <div class="d-md-flex align-items-center">
+                <h3 class="page-title">Procesos</h3>
+                <div class="ms-auto">
+                    <nav aria-label="breadcrumb">
+                        <ol class="breadcrumb">
+                            <li class="breadcrumb-item" tabindex="0"><a href="javascript:void(0)">Componente</a></li>
+                            <li class="breadcrumb-item active">Procesos</li>
+                        </ol>
+                    </nav>
+                </div>
+            </div>
+        </div>
+
+        <br>
+
+        <div class="card">
+            <div class="card-body">
+                <h4 class="card-title"></h4>
+
+                <hr>
+        
+                <div class="d-flex mb-3 mt-3">
+                    <input type="text" placeholder="Buscar..." class="form-control w-25 ng-untouched ng-pristine ng-valid" [(ngModel)]="searchTerm" (input)="onSearch()">
+                    <button class="btn btn-info ms-auto" (click)="showDialog()">
+                        Nuevo proceso
+                    </button>
+                </div>
+        
+                <div class="table-responsive">
+                    <table class="table align-middle text-nowrap">
+                        <thead>
+                            <tr>
+                                <th scope="col" class="text-center"> # </th>
+                                <th scope="col"> Nombre </th>
+                                <th scope="col"> Año </th>
+                                <th scope="col"> Fecha Inicial </th>
+                                <th scope="col"> Fecha Final </th>
+                                <th scope="col"> Periodo </th>
+                                <th scope="col"> Estado </th>
+                                <th scope="col"> Acciones </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let result of results; let i = index">
+                                <td class="text-center"> {{ i + 1 }} </td>
+                                <td> {{ result.nombre }} </td>
+                                <td> {{ result.anio }} </td>
+                                <td class="text-center">{{ result.inicio }}</td>
+                                <td class="text-center">{{ result.fin }}</td>
+                                <td> {{ result.periodo }} </td>
+                                <td>
+                                    <span class="p-2" [ngClass]="result.estatus ? 'badge bg-success' : 'badge bg-danger'" style="display: inline-block; width: 80px;">
+                                        {{ result.estatus ? 'Activo' : 'Inactivo' }}
+                                    </span>
+                                </td>
+                                <td>
+                                    <button class="btn btn-warning btn-sm fixed-button" (click)="toggleStatus(result)">
+                                        {{ result.estatus ? 'Desactivar' : 'Activar' }}
+                                    </button>
+                                    &nbsp;
+                                    <button class="btn btn-primary btn-sm" (click)="editProceso(result)">Editar</button>
+                                    &nbsp;
+                                    <button class="btn btn-danger btn-sm" (click)="confirmDelete(result)">Eliminar</button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal -->
+<div>
+    <p-toast position="top-center"></p-toast>
+    <p-dialog *ngIf="visible" [header]="isEditMode ? 'Editar proceso' : 'Nuevo proceso'" [(visible)]="visible" [breakpoints]="{ '960px': '75vw' }" [style]="{ width: '25vw' }" [draggable]="false" [resizable]="false" (onHide)="hideDialog()">
+        <p-messages [(value)]="note" [enableService]="false" />
+        
+        <form [formGroup]="form" (submit)="submit()">
+            <div class="form-group">
+                <label name="nombre" class="col-lg-4 col-form-label fw-bold fs-3">Nombre <i class="text-danger">*</i></label>
+                <input type="text" placeholder="NOMBRE DEL PROCESO" class="form-control" formControlName="nombre" id="nombre" name="nombre">
+            </div>
+
+            <div class="form-group">
+                <label name="anio" class="col-lg-4 col-form-label fw-bold fs-3">Año <i class="text-danger">*</i></label>
+                <input type="number" placeholder="AÑO" class="form-control" formControlName="anio" id="anio" name="anio">
+            </div>
+
+            <div class="form-group">
+                <div class="row">
+                    <div class="col">
+                        <label name="inicio" class="col-form-label fw-bold fs-3">Fecha de Inicio <i class="text-danger">*</i></label>
+                        <input type="date" class="form-control" formControlName="inicio" id="inicio" name="inicio">
+                    </div>
+
+                    <div class="col">
+                        <label name="fin" class="col-form-label fw-bold fs-3">Fecha de Fin <i class="text-danger">*</i></label>
+                        <input type="date" class="form-control" formControlName="fin" id="fin" name="fin">
+                    </div>
+
+                    <div class="col">
+                        <label name="periodo" class="col-form-label fw-bold fs-3">Periodo <i class="text-danger">*</i></label>
+                        <select class="form-control" formControlName="periodo" id="periodo" name="periodo">
+                            <option value="" disabled selected>SELECCIONE UN PERIODO</option>
+                            <option value="2">Enero - Abril</option>
+                            <option value="3">Mayo - Agosto</option>
+                            <option value="1">Septiembre - Diciembre</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <hr>
+            <div class="justify-content-end d-flex">
+                <button type="submit" class="btn btn-success " [disabled]="loading">
+                    <span *ngIf="!loading">{{ isEditMode ? 'Actualizar' : 'Enviar' }}</span>
+                    <span *ngIf="loading">Por favor, espere...</span>
+                </button>
+            </div>
+        </form>
+    </p-dialog>
+</div>

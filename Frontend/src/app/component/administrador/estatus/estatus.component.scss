@@ -1,0 +1,55 @@
+// Button styles
+.btn-selectAll {
+    background-color: #127805c0;
+    color: #fff;
+    margin-top: 10px;
+    margin-right: 10px;
+}
+
+.btn-descargar {
+    background-color: #FF6624;
+    color: #fff;
+    margin-top: 10px;
+    margin-right: 10px;
+}
+
+.btn-compartir {
+    background-color: #0C59CF;
+    color: #fff;
+    margin-top: 10px;
+    margin-right: 10px;
+}
+
+.btn-actualizar {
+    background-color: #FEC63D;
+    color: #fff;
+    margin-top: 10px;
+    margin-right: 10px;
+}
+
+.dropdownCarrera{
+    margin-top: 10px;
+    margin-right: 10px;
+}
+
+.dropdownProceso{
+    margin-top: 10px;
+    margin-right: 10px;
+}
+
+@media (max-width: 768px) {
+    .d-flex {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .d-flex .btn {
+        margin-top: 10px;
+        width: 100%;
+    }
+
+    .form-control {
+        width: 100%;
+        margin-bottom: 10px;
+    }
+}

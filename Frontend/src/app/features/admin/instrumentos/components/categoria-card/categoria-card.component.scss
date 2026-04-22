@@ -1,0 +1,126 @@
+// ── Tokens MDC locales ─────────────────────────────────────────────────
+.categoria-card {
+  --mdc-outlined-text-field-focus-outline-color:    #01907e;
+  --mdc-outlined-text-field-focus-label-text-color: #01907e;
+  --mdc-outlined-text-field-label-text-color:       #45534f;
+  --mdc-outlined-text-field-input-text-color:       #1f2d29;
+  --mat-select-focused-arrow-color:                 #01907e;
+  --mat-select-trigger-text-color:                  #1f2d29;
+}
+
+.categoria-card {
+  background: #ffffff;
+  border: 1px solid #b2d8d2;
+  border-radius: 16px;
+  box-shadow: 0 1px 3px rgba(1,144,126,0.06), 0 4px 12px rgba(1,144,126,0.04);
+  padding: 1.25rem 1.5rem 1.5rem;
+  font-family: 'Inter', sans-serif;
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+  transition: box-shadow 0.2s ease, border-color 0.2s ease;
+
+  &:hover {
+    border-color: #58c6b6;
+    box-shadow: 0 2px 8px rgba(1,144,126,0.1), 0 8px 24px rgba(1,144,126,0.08);
+  }
+}
+
+.categoria-toolbar {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+
+.drag-handle {
+  display: flex;
+  align-items: center;
+  color: #45534f;
+  cursor: grab;
+  border-radius: 6px;
+  padding: 2px;
+  flex-shrink: 0;
+  transition: color 0.15s ease, background 0.15s ease;
+
+  &:active { cursor: grabbing; }
+  &:hover { color: #01907e; background: rgba(1,144,126,0.08); }
+
+  mat-icon { font-size: 20px; width: 20px; height: 20px; }
+}
+
+.orden-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(1, 144, 126, 0.12);
+  color: #016a5b;
+  font-family: 'JetBrains Mono', 'Fira Code', monospace;
+  font-size: 0.72rem;
+  font-weight: 700;
+  min-width: 24px;
+  height: 24px;
+  padding: 0 6px;
+  border-radius: 99px;
+  flex-shrink: 0;
+  letter-spacing: 0.02em;
+}
+
+.titulo-field { flex: 1; min-width: 180px; }
+
+.acciones { display: flex; align-items: center; gap: 0.5rem; flex-shrink: 0; }
+
+.btn-agregar-pregunta {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  background: #01907e;
+  color: #ffffff;
+  padding: 0.5rem 1rem;
+  border-radius: 10px;
+  font-family: 'Inter', sans-serif;
+  font-size: 0.82rem;
+  font-weight: 600;
+  border: none;
+  cursor: pointer;
+  box-shadow: 0 2px 8px rgba(1,144,126,0.28);
+  letter-spacing: -0.01em;
+  transition: background 0.18s ease, transform 0.15s ease, box-shadow 0.18s ease;
+
+  mat-icon { font-size: 16px; width: 16px; height: 16px; }
+
+  &:hover { background: #016a5b; transform: translateY(-1px); box-shadow: 0 4px 16px rgba(1,144,126,0.38); }
+  &:active { transform: translateY(0); }
+}
+
+.btn-eliminar-categoria {
+  color: #e11d48 !important;
+  transition: background 0.15s ease !important;
+  &:hover { background: #fff1f2 !important; }
+}
+
+.preguntas-list { display: flex; flex-direction: column; gap: 0.75rem; min-height: 48px; }
+
+.pregunta-drag-item { cursor: grab; &:active { cursor: grabbing; } }
+
+.drag-placeholder {
+  background: rgba(1, 144, 126, 0.08);
+  border: 2px dashed #01907e;
+  border-radius: 10px;
+  min-height: 80px;
+}
+
+.empty-preguntas {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 1.5rem 1rem;
+  background: #e6f6f3;
+  border: 1px dashed #58c6b6;
+  border-radius: 10px;
+  color: #45534f;
+  font-size: 0.875rem;
+
+  mat-icon { font-size: 20px; width: 20px; height: 20px; opacity: 0.5; flex-shrink: 0; }
+  strong { color: #01907e; }
+}

@@ -1,0 +1,131 @@
+h3 {
+    text-align: center;
+}
+
+.scrollable-container {
+    max-height: 400px; /* Ajusta la altura máxima según tus necesidades */
+    overflow-y: auto;
+  }
+
+.titulo {
+    text-align: left;
+    font-size: 15px;
+  
+}
+
+.subtitulo {
+    text-align: left;
+}
+
+p {
+    text-align: left;
+}
+
+button {
+    margin-bottom: 10px;
+}
+
+.cards-container {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.card-item {
+    margin: 10px;
+}
+
+// Button styles
+.btn-selectAll {
+    background-color: #127805c0;
+    color: #fff;
+    margin-top: 10px;
+    margin-right: 10px;
+}
+
+.btn-descargar {
+    background-color: #FF6624;
+    color: #fff;
+    margin-top: 10px;
+    margin-right: 10px;
+}
+
+.btn-compartir {
+    background-color: #0C59CF;
+    color: #fff;
+    margin-top: 10px;
+    margin-right: 10px;
+}
+
+.btn-actualizar {
+    background-color: #FEC63D;
+    color: #fff;
+    margin-top: 10px;
+    margin-right: 10px;
+}
+
+.dropdownCarrera{
+    margin-top: 10px;
+    margin-right: 10px;
+}
+
+.dropdownProceso{
+    margin-top: 10px;
+    margin-right: 10px;
+}
+
+.card.selected {
+    border: 2px solid #007bff; 
+    transition: border-color 0.3s;
+}
+
+@media (max-width: 768px) {
+    .d-flex.flex-wrap .btn {
+        width: 100%;
+        margin-bottom: 10px;
+    }
+}
+
+.custom-card {
+  border: 2px solid #007bff;
+  border-radius: 10px;
+  padding: 1rem;
+  width: 300px;
+  margin: 1rem;
+}
+
+
+.button-group {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 1rem;
+}
+
+.button-group {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 1rem;
+  gap: 10px;
+  text-align: center;
+}
+
+.rounded-btn {
+  border-radius: 12px;
+  width: 48%;
+}
+
+#descargar{
+    border-radius: 10px;
+}
+
+#compartir{
+    border-radius: 10px;
+    
+}
+
+.cards-container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center; /* o 'flex-start' si quieres que se alineen a la izquierda */
+  gap: 20px; /* espacio entre tarjetas */
+}

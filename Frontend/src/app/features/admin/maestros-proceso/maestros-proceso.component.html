@@ -1,0 +1,156 @@
+<div class="reportes-root">
+
+  <!-- ── Encabezado ────────────────────────────────────────────── -->
+  <div class="page-header">
+    <h3 class="page-titulo">Reportes de Evaluación Docente</h3>
+    <small class="text-muted">Genera y descarga reportes por maestro</small>
+  </div>
+
+  <!-- ── Selector de proceso ───────────────────────────────────── -->
+  <div class="selector-card">
+    <label class="selector-label">
+      <i class="bi bi-calendar-check me-2"></i>Selecciona el periodo de evaluación
+    </label>
+    <select class="form-select selector-select" [(ngModel)]="procesoSeleccionado" (ngModelChange)="onProcesoChange()">
+      <option [ngValue]="null" disabled>Selecciona un periodo…</option>
+      <option *ngFor="let p of procesos" [ngValue]="p.id">
+        {{ p.nombre }} · {{ periodoLabel(p.periodo) }} {{ p.anio }}
+        <ng-container *ngIf="p.activo"> (Activo)</ng-container>
+      </option>
+    </select>
+  </div>
+
+  <div class="estado-cargando" *ngIf="loading">
+    <div class="spinner-ring"></div><p>Cargando procesos…</p>
+  </div>
+  <div class="alert alert-danger" *ngIf="errorMsg">{{ errorMsg }}</div>
+
+  <!-- ── Lista de maestros ─────────────────────────────────────── -->
+  <div *ngIf="procesoSeleccionado && !loading">
+    <div class="estado-cargando" *ngIf="loadingMaestros">
+      <div class="spinner-ring"></div><p>Cargando maestros…</p>
+    </div>
+    <div class="alert alert-info" *ngIf="!loadingMaestros && maestros.length === 0">
+      No hay maestros evaluados en este periodo.
+    </div>
+    <div class="maestros-grid" *ngIf="!loadingMaestros && maestros.length > 0">
+      <div class="maestro-card" *ngFor="let m of maestros" (click)="verReporte(m.idMaestro)">
+        <div class="maestro-avatar">{{ m.nombreMaestro.charAt(0) }}</div>
+        <div class="maestro-info">
+          <span class="maestro-nombre">{{ m.nombreMaestro | titlecase }}</span>
+          <span class="maestro-meta">
+            <i class="bi bi-people me-1"></i>{{ m.totalEvaluaciones }} eval.
+            <span class="ms-2"><i class="bi bi-book me-1"></i>{{ m.totalMaterias }} materia(s)</span>
+          </span>
+        </div>
+        <div class="maestro-calificacion" [style.color]="getColor(m.calificacionGlobal)">
+          <span class="cal-valor">{{ ((m.calificacionGlobal / 5) * 10).toFixed(1) }}</span>
+          <span class="cal-label">/10</span>
+        </div>
+        <div class="maestro-accion"><i class="bi bi-file-earmark-bar-graph-fill"></i></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── Modal de reporte ──────────────────────────────────────── -->
+  <div class="modal-overlay" *ngIf="reporte || loadingReporte" (click)="cerrarReporte()">
+    <div class="modal-reporte" (click)="$event.stopPropagation()">
+
+      <div class="estado-cargando" *ngIf="loadingReporte">
+        <div class="spinner-ring"></div><p>Cargando reporte…</p>
+      </div>
+
+      <ng-container *ngIf="reporte && !loadingReporte">
+
+        <!-- Cabecera -->
+        <div class="reporte-header">
+          <div>
+            <h4 class="reporte-nombre">{{ reporte.nombreMaestro | titlecase }}</h4>
+            <span class="reporte-meta">{{ nombreProceso }} · {{ reporte.totalEvaluaciones }} evaluaciones</span>
+          </div>
+          <div class="reporte-acciones">
+            <button class="btn-pdf" (click)="exportarPdf()" [disabled]="generandoPdf">
+              <span *ngIf="generandoPdf" class="spinner-sm"></span>
+              <i *ngIf="!generandoPdf" class="bi bi-file-earmark-pdf me-1"></i>
+              {{ generandoPdf ? 'Generando…' : 'PDF' }}
+            </button>
+            <button class="btn-cerrar" (click)="cerrarReporte()"><i class="bi bi-x-lg"></i></button>
+          </div>
+        </div>
+
+        <!-- Calificación global -->
+        <div class="promedio-badge" [style.background]="colorCalificacion">
+          <span class="promedio-valor">{{ calificacionEscala10.toFixed(2) }}</span>
+          <span class="promedio-sub">/ 10</span>
+          <span class="promedio-label">Calificación General ({{ reporte.calificacionGlobal.toFixed(2) }}/5)</span>
+        </div>
+
+        <!-- ── Pestañas por materia/grupo ─────────────────────── -->
+        <div class="materias-tabs" *ngIf="reporte.porMateria.length > 1">
+          <button
+            class="materia-tab"
+            *ngFor="let m of reporte.porMateria; let i = index"
+            [class.active]="materiaActiva === i"
+            (click)="materiaActiva = i">
+            <span class="tab-materia">{{ m.nombreMateria }}</span>
+            <span class="tab-grupo">Gpo. {{ m.grupo }}</span>
+            <span class="tab-cal" [style.color]="getColor(m.calificacion / 5 * 5)">
+              {{ (m.calificacion / 5 * 10).toFixed(1) }}
+            </span>
+          </button>
+        </div>
+
+        <!-- Contenido de la materia activa -->
+        <ng-container *ngFor="let mat of reporte.porMateria; let i = index">
+          <div *ngIf="materiaActiva === i">
+
+            <!-- Badge de esta materia -->
+            <div class="materia-info-banner" *ngIf="reporte.porMateria.length > 1">
+              <i class="bi bi-book me-2"></i>
+              <strong>{{ mat.nombreMateria }}</strong>
+              <span class="ms-2 text-muted">· Grupo {{ mat.grupo }}</span>
+              <span class="ms-auto badge-cal-mat" [style.background]="getColor(mat.calificacion / 5 * 5)">
+                {{ (mat.calificacion / 5 * 10).toFixed(2) }}/10
+              </span>
+            </div>
+
+            <!-- Preguntas de esta materia -->
+            <div class="preguntas-lista">
+              <div class="pregunta-reporte" *ngFor="let p of mat.porPregunta; let j = index">
+                <div class="pregunta-reporte-header">
+                  <span class="pregunta-num">{{ j + 1 }}</span>
+                  <p class="pregunta-reporte-texto">{{ p.textoPregunta }}</p>
+                  <span class="pregunta-promedio" [style.color]="getColor(p.promedio)">
+                    {{ (p.promedio / 5 * 10).toFixed(1) }}/10
+                  </span>
+                </div>
+                <div class="distribucion">
+                  <div class="dist-item" *ngFor="let d of distribucionEntries(p.distribucion)">
+                    <span class="dist-label">{{ d.key }}</span>
+                    <div class="dist-barra-wrap">
+                      <div class="dist-barra" [style.width.%]="(d.value / mat.totalEvaluaciones) * 100"></div>
+                    </div>
+                    <span class="dist-count">{{ d.value }}</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Comentarios de esta materia -->
+            <div class="comentarios-seccion" *ngIf="mat.comentarios.length > 0">
+              <h5 class="comentarios-titulo">
+                <i class="bi bi-chat-left-quote me-2"></i>Comentarios ({{ mat.comentarios.length }})
+              </h5>
+              <div class="comentario-item" *ngFor="let c of mat.comentarios">
+                <i class="bi bi-quote"></i><p>{{ c }}</p>
+              </div>
+            </div>
+
+          </div>
+        </ng-container>
+
+      </ng-container>
+    </div>
+  </div>
+
+</div>

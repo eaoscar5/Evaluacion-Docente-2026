@@ -1,0 +1,92 @@
+<div class="pregunta-card">
+
+  <!-- ── Toolbar ── -->
+  <div class="toolbar">
+    <span class="drag-handle" cdkDragHandle matTooltip="Arrastrar para reordenar">
+      <mat-icon>drag_indicator</mat-icon>
+    </span>
+    <span class="spacer"></span>
+    <button mat-icon-button class="btn-eliminar-pregunta" (click)="eliminar.emit()" matTooltip="Eliminar pregunta">
+      <mat-icon>delete_outline</mat-icon>
+    </button>
+  </div>
+
+  <!-- ── Texto de la pregunta ── -->
+  <mat-form-field appearance="outline" class="full-width">
+    <mat-label>Texto de la pregunta</mat-label>
+    <input matInput [(ngModel)]="pregunta.texto" placeholder="Nueva pregunta" />
+    @if (!pregunta.texto) {
+      <mat-error>El texto de la pregunta es obligatorio.</mat-error>
+    }
+  </mat-form-field>
+
+  <!-- ── Tipo de pregunta ── -->
+  <mat-form-field appearance="outline" class="tipo-field">
+    <mat-label>Tipo</mat-label>
+    <mat-select [(ngModel)]="pregunta.tipo" (ngModelChange)="onTipoCambiado()">
+      @for (opt of tipoPreguntaOptions; track opt.value) {
+        <mat-option [value]="opt.value">{{ opt.label }}</mat-option>
+      }
+    </mat-select>
+  </mat-form-field>
+
+  <!-- ── Opciones (solo si es Cerrada) ── -->
+  @if (pregunta.tipo === TipoPregunta.Cerrada) {
+    <div class="opciones-container">
+
+      <div class="opciones-header">
+        <span class="opciones-label">Opciones de respuesta</span>
+        <!-- Botón para restaurar opciones predeterminadas -->
+        <button
+          class="btn-reset-opciones"
+          (click)="aplicarOpcionesPredeterminadas()"
+          matTooltip="Restaurar opciones predeterminadas (Nunca → Siempre)">
+          <mat-icon>refresh</mat-icon> Restaurar predeterminadas
+        </button>
+      </div>
+
+      @if (!pregunta.opciones || pregunta.opciones.length === 0) {
+        <div class="opciones-vacio">
+          <mat-icon>warning_amber</mat-icon>
+          <span>Sin opciones — se usarán las predeterminadas al guardar.</span>
+          <button class="btn-add-opcion" (click)="aplicarOpcionesPredeterminadas()">
+            Cargar predeterminadas
+          </button>
+        </div>
+      }
+
+     @for (op of pregunta.opciones; let i = $index; track trackOpcion(i, op)) {
+        <div class="opcion-row">
+          <span class="opcion-num">{{ i + 1 }}</span>
+
+          <mat-form-field appearance="outline" class="flex-1" subscriptSizing="dynamic">
+            <mat-label>Texto de la opción</mat-label>
+            <input matInput [(ngModel)]="op.texto" />
+          </mat-form-field>
+
+          <mat-form-field appearance="outline" class="valor-field" subscriptSizing="dynamic">
+            <mat-label>Valor</mat-label>
+            <input matInput type="number" [(ngModel)]="op.valor" min="0" required />
+          </mat-form-field>
+
+          <button mat-icon-button class="btn-eliminar-opcion" (click)="eliminarOpcion(i)" matTooltip="Eliminar opción">
+            <mat-icon>remove_circle_outline</mat-icon>
+          </button>
+        </div>
+      }
+
+      <button class="btn-add-opcion" (click)="agregarOpcion()">
+        <mat-icon>add</mat-icon> Agregar opción
+      </button>
+
+    </div>
+  }
+
+  @if (pregunta.tipo === TipoPregunta.Abierta) {
+    <div class="abierta-hint">
+      <mat-icon>edit_note</mat-icon>
+      <span>Respuesta de texto libre — sin opciones predefinidas</span>
+    </div>
+  }
+
+</div>

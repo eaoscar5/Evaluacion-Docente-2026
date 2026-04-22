@@ -1,0 +1,70 @@
+<div class="row mt-4"></div>
+    <div class="col-12">
+        <div class="page-breadcrumb">
+            <div class="d-md-flex align-items-center">
+                <h3 class="page-title">Estatus de Grupos</h3>
+                <div class="ms-auto">
+                    <nav aria-label="breadcrumb">
+                        <ol class="breadcrumb">
+                            <li class="breadcrumb-item" tabindex="0"><a href="javascript:void(0)">Componente</a></li>
+
+                            <li class="breadcrumb-item active">Estatus</li>
+                        </ol>
+                    </nav>
+                </div>
+            </div>
+        </div>
+
+        <br>
+
+        <div class="card">
+            <div class="card-body">
+                <h4 class="card-title">Estatus de Grupos
+                </h4>
+                <hr>
+                <div class="d-flex flex-wrap mb-3 mt-3">
+                    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+                    <link rel="stylesheet" href="estatus.component.scss">
+
+                    <input type="text" placeholder="Buscar..." class="form-control w-25 mb-2 mb-md-0">
+
+                    <button class="btn btn-selectAll ms-auto mb-2 mb-md-0 mt-1">
+                        <i class="fa fa-list-ul"></i> Seleccionar Todo
+                    </button>
+                    <button class="btn btn-descargar ms-1 mb-2 mb-md-0 mt-1">
+                        <i class="fas fa-download"></i> Descargar
+                    </button>
+                    <button class="btn btn-actualizar ms-1 mb-2 mb-md-0 mt-1">
+                        <i class="fas fa-sync-alt"></i> Actualizar
+                    </button>
+                    
+                    <select class="form-control w-auto ms-1 mb-2 mb-md-0 mt-1">
+                        <option selected disabled>Carrera:</option>
+                        <option *ngFor="let carrera of carreras" [value]="carrera.name">{{ carrera.name }}</option>
+                    </select>
+
+                    <select class="form-control w-auto ms-1 mb-2 mb-md-0 mt-1">
+                        <option selected disabled>Proceso:</option>
+                        <option *ngFor="let proceso of procesos" [value]="proceso.nameP">{{ proceso.nameP }}</option>
+                    </select>
+                </div>
+                <div class="table-responsive">
+                    <table class="table align-middle text-nowrap">
+                        <thead>
+                            <tr>
+                                <th scope="col" class="text-center">Grupo</th>
+                                <th scope="col" class="text-center">Numero de Inscritos</th>
+                                <th scope="col" class="text-center">Participaron</th>
+                                <th scope="col" class="text-center">Culminaron</th>
+                                <th scope="col" class="text-center">Porcentaje que Participo</th>
+                                <th scope="col" class="text-center">Porcentaje que Culmino</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <!-- Data rows go here -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div> 

@@ -1,0 +1,58 @@
+<div class="categoria-card">
+
+  <!-- ── Toolbar de la categoría ── -->
+  <div class="categoria-toolbar">
+
+    <span class="drag-handle" cdkDragHandle matTooltip="Arrastrar para reordenar categoría">
+      <mat-icon>drag_indicator</mat-icon>
+    </span>
+
+    <span class="orden-badge">{{ categoria.orden }}</span>
+
+    <mat-form-field appearance="outline" class="titulo-field" subscriptSizing="dynamic">
+      <mat-label>Nombre de la categoría</mat-label>
+      <input matInput [(ngModel)]="categoria.nombre" placeholder="Nueva categoría" />
+      @if (!categoria.nombre) {
+        <mat-error>El nombre es obligatorio.</mat-error>
+      }
+    </mat-form-field>
+
+    <div class="acciones">
+      <button class="btn-agregar-pregunta" (click)="agregarPregunta()">
+        <mat-icon>add</mat-icon> Pregunta
+      </button>
+
+      <button mat-icon-button class="btn-eliminar-categoria" (click)="eliminar.emit()"
+              matTooltip="Eliminar categoría">
+        <mat-icon>delete_outline</mat-icon>
+      </button>
+    </div>
+
+  </div>
+
+  <!-- ── Lista de preguntas con drag-and-drop ── -->
+  <div
+    cdkDropList
+    [cdkDropListData]="categoria.preguntas"
+    (cdkDropListDropped)="reordenarPreguntas($event)"
+    class="preguntas-list"
+  >
+
+@for (pregunta of categoria.preguntas; track trackPregunta(pregunta); let i = $index) {
+      <div cdkDrag class="pregunta-drag-item">
+        <div *cdkDragPlaceholder class="drag-placeholder"></div>
+        <app-pregunta-card
+          [pregunta]="pregunta"
+          (eliminar)="eliminarPregunta(i)">
+        </app-pregunta-card>
+      </div>
+    } @empty {
+      <div class="empty-preguntas">
+        <mat-icon>help_outline</mat-icon>
+        <span>Sin preguntas — pulsa <strong>+ Pregunta</strong> para añadir una.</span>
+      </div>
+    }
+
+  </div>
+
+</div>

@@ -1,0 +1,125 @@
+<div class="dashboard-root">
+
+  <!-- ── KPIs ─────────────────────────────────────────────────── -->
+  <div class="kpi-grid">
+
+    <!-- <div class="kpi-card kpi-proceso">
+      <div class="kpi-icon"><i class="bi bi-calendar2-check"></i></div>
+      <div class="kpi-info">
+        <span class="kpi-label">Proceso activo</span>
+        <span class="kpi-value">{{ procesoActivo ? procesoActivo.nombre : '—' }}</span>
+        <span class="kpi-sub" *ngIf="procesoActivo">
+          {{ periodoLabel(procesoActivo.periodo) }} {{ procesoActivo.anio }}
+        </span>
+      </div>
+      <span class="kpi-badge kpi-badge-green" *ngIf="procesoActivo">Activo</span>
+      <span class="kpi-badge kpi-badge-gray" *ngIf="!procesoActivo">Sin proceso</span>
+    </div> -->
+
+    <div class="kpi-card">
+      <div class="kpi-icon kpi-icon-blue"><i class="bi bi-clipboard-data"></i></div>
+      <div class="kpi-info">
+        <span class="kpi-label">Instrumentos</span>
+        <span class="kpi-value">{{ totalInstrumentos }}</span>
+        <span class="kpi-sub">registrados</span>
+      </div>
+    </div>
+
+    <div class="kpi-card">
+      <div class="kpi-icon kpi-icon-teal"><i class="bi bi-people"></i></div>
+      <div class="kpi-info">
+        <span class="kpi-label">Maestros evaluados</span>
+        <span class="kpi-value">{{ totalMaestrosEvaluados }}</span>
+        <span class="kpi-sub" *ngIf="procesoActivo">en el proceso actual</span>
+        <span class="kpi-sub" *ngIf="!procesoActivo">sin proceso activo</span>
+      </div>
+    </div>
+
+    <div class="kpi-card">
+      <div class="kpi-icon kpi-icon-amber"><i class="bi bi-archive"></i></div>
+      <div class="kpi-info">
+        <span class="kpi-label">Total procesos</span>
+        <span class="kpi-value">{{ totalProcesos }}</span>
+        <span class="kpi-sub">histórico</span>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ── Proceso activo detalle ─────────────────────────────────── -->
+  <div class="section-grid">
+
+    <!-- Tarjeta proceso activo -->
+    <div class="detail-card">
+      <div class="detail-header">
+        <h4 class="detail-title">
+          <i class="bi bi-calendar-check me-2"></i>Proceso Activo
+        </h4>
+      </div>
+
+      <div class="proceso-detalle" *ngIf="procesoActivo">
+        <div class="detalle-row">
+          <span class="detalle-label">Nombre</span>
+          <span class="detalle-val">{{ procesoActivo.nombre }}</span>
+        </div>
+        <div class="detalle-row">
+          <span class="detalle-label">Año</span>
+          <span class="detalle-val">{{ procesoActivo.anio }}</span>
+        </div>
+        <div class="detalle-row">
+          <span class="detalle-label">Periodo</span>
+          <span class="detalle-val">{{ periodoLabel(procesoActivo.periodo) }}</span>
+        </div>
+        <div class="detalle-row">
+          <span class="detalle-label">Estado</span>
+          <span class="badge-activo">● Activo</span>
+        </div>
+        <button class="btn-cerrar-proceso" (click)="cerrarProceso(procesoActivo.id)">
+          <i class="bi bi-stop-circle me-1"></i> Cerrar proceso
+        </button>
+      </div>
+
+      <div class="proceso-vacio" *ngIf="!procesoActivo && !loading">
+        <i class="bi bi-calendar-x"></i>
+        <p>No hay proceso activo</p>
+      </div>
+    </div>
+
+    <!-- Acciones rápidas -->
+    <div class="detail-card">
+      <div class="detail-header">
+        <h4 class="detail-title">
+          <i class="bi bi-lightning-charge me-2"></i>Acciones rápidas
+        </h4>
+      </div>
+      <div class="acciones-lista">
+        <a routerLink="/instrumentos" class="accion-item">
+          <div class="accion-icon accion-teal"><i class="bi bi-clipboard-check"></i></div>
+          <div>
+            <span class="accion-titulo">Instrumentos</span>
+            <span class="accion-sub">Administrar cuestionarios</span>
+          </div>
+          <i class="bi bi-chevron-right accion-arrow"></i>
+        </a>
+        <a routerLink="/procesos" class="accion-item">
+          <div class="accion-icon accion-blue"><i class="bi bi-calendar-check"></i></div>
+          <div>
+            <span class="accion-titulo">Procesos</span>
+            <span class="accion-sub">Gestionar periodos</span>
+          </div>
+          <i class="bi bi-chevron-right accion-arrow"></i>
+        </a>
+        <a routerLink="/reportes" class="accion-item">
+          <div class="accion-icon accion-amber"><i class="bi bi-bar-chart-line"></i></div>
+          <div>
+            <span class="accion-titulo">Reportes</span>
+            <span class="accion-sub">Ver evaluaciones y PDF</span>
+          </div>
+          <i class="bi bi-chevron-right accion-arrow"></i>
+        </a>
+      </div>
+    </div>
+
+  </div>
+
+</div>

@@ -1,0 +1,138 @@
+<div class="row mt-4">
+    <div class="col-12">
+        <div class="page-breadcrumb">
+            <div class="d-md-flex align-items-center">
+                <h3 class="page-title">Instrumentos</h3>
+                <div class="ms-auto">
+                    <nav aria-label="breadcrumb">
+                        <ol class="breadcrumb">
+                            <li class="breadcrumb-item" tabindex="0"><a href="javascript:void(0)">Componente</a></li>
+                            <li class="breadcrumb-item active">Instrumentos</li>
+                        </ol>
+                    </nav>
+                </div>
+            </div>
+        </div>
+
+        <br>
+
+        <div class="card">
+            <div class="card-body">
+                <h4 class="card-title">Gestión de Instrumentos</h4>
+
+                <hr>
+
+                <!-- Barra de búsqueda y botón de nuevo -->
+                <div class="d-flex mb-3 mt-3">
+                    <input
+                        type="text"
+                        placeholder="Buscar..."
+                        class="form-control w-25"
+                        [(ngModel)]="searchTerm"
+                        (input)="onSearch()"
+                    />
+                    <button class="btn btn-info ms-auto" (click)="showDialog()">Nuevo Instrumento</button>
+                </div>
+
+                <!-- Tabla de instrumentos -->
+                <div class="table-responsive">
+                    <table class="table align-middle text-nowrap">
+                        <thead>
+                            <tr>
+                                <th scope="col" class="text-center">#</th>
+                                <th scope="col">Nombre</th>
+                                <th scope="col">Tipo</th>
+                                <th scope="col">Fecha de Creación</th>
+                                <th scope="col">Fecha de Actualización</th>
+                                <th scope="col">Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let result of results; let i = index">
+                                <td class="text-center">{{ i + 1 }}</td>
+                                <td>{{ result.nombre }}</td>
+                                <td>{{ result.tipo }}</td>
+                                <td>{{ result.createdAt }}</td>
+                                <td>{{ result.updatedAt }}</td>
+                                <td>
+                                    <button class="btn btn-primary btn-sm" (click)="editInstrumento(result)">
+                                        Editar
+                                    </button>
+                                    &nbsp;
+                                    <button class="btn btn-danger btn-sm" (click)="confirmDelete(result)">
+                                        Eliminar
+                                    </button>
+                                </td>
+                            </tr>
+                            <tr *ngIf="results.length === 0">
+                                <td colspan="6" class="text-center">No se encontraron instrumentos</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal -->
+<div>
+    <p-toast position="top-center"></p-toast>
+    <p-dialog
+        *ngIf="visible"
+        [header]="isEditMode ? 'Editar Instrumento' : 'Nuevo Instrumento'"
+        [(visible)]="visible"
+        [breakpoints]="{ '960px': '75vw' }"
+        [style]="{ width: '25vw' }"
+        [draggable]="false"
+        [resizable]="false"
+        (onHide)="hideDialog()"
+    >
+        <p-messages [(value)]="note" [enableService]="false"></p-messages>
+
+        <form [formGroup]="form" (submit)="submit()">
+            <div class="form-group">
+                <label for="nombre" class="col-lg-4 col-form-label fw-bold fs-5">
+                    Nombre <i class="text-danger">*</i>
+                </label>
+                <input
+                    type="text"
+                    placeholder="Nombre del instrumento"
+                    class="form-control"
+                    formControlName="nombre"
+                    id="nombre"
+                    name="nombre"
+                />
+                <small *ngIf="form.get('nombre')?.invalid && form.get('nombre')?.touched" class="text-danger">
+                    El nombre es obligatorio.
+                </small>
+            </div>
+
+            <div class="form-group">
+                <label for="tipo" class="col-lg-4 col-form-label fw-bold fs-5">
+                    Tipo <i class="text-danger">*</i>
+                </label>
+                <input
+                    type="text"
+                    placeholder="Tipo del instrumento"
+                    class="form-control"
+                    formControlName="tipo"
+                    id="tipo"
+                    name="tipo"
+                />
+                <small *ngIf="form.get('tipo')?.invalid && form.get('tipo')?.touched" class="text-danger">
+                    El tipo es obligatorio.
+                </small>
+            </div>
+
+            <hr />
+
+            <div class="justify-content-end d-flex">
+                <button type="submit" class="btn btn-success" [disabled]="form.invalid || loading">
+                    <span *ngIf="!loading">{{ isEditMode ? 'Actualizar' : 'Guardar' }}</span>
+                    <span *ngIf="loading">Por favor, espere...</span>
+                </button>
+            </div>
+        </form>
+    </p-dialog>
+</div>

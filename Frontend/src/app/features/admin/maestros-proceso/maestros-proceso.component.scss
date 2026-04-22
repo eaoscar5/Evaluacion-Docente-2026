@@ -1,0 +1,494 @@
+// ── Paleta UTS ────────────────────────────────────────────────────────────
+.reportes-root {
+  padding: 2rem 1.5rem;
+  max-width: 1000px;
+  margin: 0 auto;
+  font-family: 'Outfit', 'Segoe UI', sans-serif;
+  color: #1f2d29;
+}
+
+// ── Header ────────────────────────────────────────────────────────────────
+.page-header {
+  margin-bottom: 1.5rem;
+}
+
+.page-titulo {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #1f2d29;
+  margin: 0 0 4px;
+}
+
+// ── Selector de proceso ───────────────────────────────────────────────────
+.selector-card {
+  background: #ffffff;
+  border: 1px solid #b2d8d2;
+  border-radius: 14px;
+  padding: 1.25rem 1.5rem;
+  margin-bottom: 1.5rem;
+  box-shadow: 0 2px 10px rgba(1,144,126,0.05);
+}
+
+.selector-label {
+  display: block;
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: #1f2d29;
+  margin-bottom: 0.6rem;
+}
+
+.selector-select {
+  border-color: #b2d8d2;
+  color: #1f2d29;
+  font-size: 0.9rem;
+
+  &:focus {
+    border-color: #01907e;
+    box-shadow: 0 0 0 3px rgba(1,144,126,0.1);
+  }
+}
+
+// ── Estado cargando ───────────────────────────────────────────────────────
+.estado-cargando {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 3rem 0;
+  color: #45534f;
+  p { margin: 0; font-size: 0.875rem; }
+}
+
+.spinner-ring {
+  width: 36px;
+  height: 36px;
+  border: 3px solid rgba(1,144,126,0.15);
+  border-top-color: #01907e;
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin { to { transform: rotate(360deg); } }
+
+// ── Grid de maestros ──────────────────────────────────────────────────────
+.maestros-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 0.75rem;
+}
+
+.maestro-card {
+  background: #ffffff;
+  border: 1px solid #b2d8d2;
+  border-radius: 12px;
+  padding: 1rem 1.25rem;
+  display: flex;
+  align-items: center;
+  gap: 0.9rem;
+  cursor: pointer;
+  transition: all 0.18s ease;
+  box-shadow: 0 1px 6px rgba(1,144,126,0.04);
+
+  &:hover {
+    border-color: #01907e;
+    box-shadow: 0 4px 16px rgba(1,144,126,0.12);
+    transform: translateY(-1px);
+
+    .maestro-accion { color: #01907e; }
+  }
+}
+
+.maestro-avatar {
+  width: 40px;
+  height: 40px;
+  background: rgba(1,144,126,0.12);
+  color: #016a5b;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 1rem;
+  flex-shrink: 0;
+  text-transform: uppercase;
+}
+
+.maestro-info { flex: 1; min-width: 0; }
+.maestro-nombre { display: block; font-weight: 600; font-size: 0.875rem; color: #1f2d29; }
+.maestro-meta   { display: block; font-size: 0.75rem; color: #45534f; }
+
+.maestro-accion {
+  color: #45534f;
+  font-size: 1.2rem;
+  transition: color 0.18s ease;
+}
+
+// ── Modal ─────────────────────────────────────────────────────────────────
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(31,45,41,0.5);
+  backdrop-filter: blur(4px);
+  z-index: 1000;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  padding: 2rem 1rem;
+  overflow-y: auto;
+}
+
+.modal-reporte {
+  background: #ffffff;
+  border-radius: 18px;
+  width: 100%;
+  max-width: 740px;
+  padding: 1.75rem;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.18);
+}
+
+// ── Header del reporte ────────────────────────────────────────────────────
+.reporte-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 1.25rem;
+}
+
+.reporte-nombre {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: #1f2d29;
+  margin: 0 0 4px;
+}
+
+.reporte-meta { font-size: 0.8rem; color: #45534f; }
+
+.reporte-acciones { display: flex; gap: 0.5rem; align-items: center; flex-shrink: 0; }
+
+.btn-pdf {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  background: #01907e;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  padding: 0.5rem 1rem;
+  font-size: 0.82rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.18s ease;
+
+  &:hover:not(:disabled) { background: #016a5b; }
+  &:disabled { opacity: 0.6; cursor: not-allowed; }
+}
+
+.btn-cerrar {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  border: 1.5px solid #b2d8d2;
+  background: transparent;
+  color: #45534f;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.15s ease;
+
+  &:hover { background: #e6f6f3; border-color: #01907e; color: #01907e; }
+}
+
+// ── Promedio general ──────────────────────────────────────────────────────
+.promedio-badge {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 0.75rem 2rem;
+  border-radius: 12px;
+  margin-bottom: 1.5rem;
+
+  .promedio-valor {
+    font-size: 2rem;
+    font-weight: 800;
+    color: #fff;
+    line-height: 1;
+  }
+
+  .promedio-label {
+    font-size: 0.72rem;
+    font-weight: 600;
+    color: rgba(255,255,255,0.85);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    margin-top: 2px;
+  }
+}
+
+// ── Lista de preguntas ────────────────────────────────────────────────────
+.preguntas-lista {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.pregunta-reporte {
+  background: #f8fffe;
+  border: 1px solid #e6f6f3;
+  border-radius: 10px;
+  padding: 1rem 1.25rem;
+}
+
+.pregunta-reporte-header {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+  margin-bottom: 0.75rem;
+}
+
+.pregunta-num {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  background: rgba(1,144,126,0.12);
+  color: #016a5b;
+  border-radius: 50%;
+  font-size: 0.72rem;
+  font-weight: 700;
+  flex-shrink: 0;
+}
+
+.pregunta-reporte-texto {
+  flex: 1;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: #1f2d29;
+  margin: 0;
+  line-height: 1.4;
+}
+
+.pregunta-promedio {
+  font-size: 1rem;
+  font-weight: 800;
+  flex-shrink: 0;
+}
+
+// ── Distribución ──────────────────────────────────────────────────────────
+.distribucion {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.dist-item {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.dist-label {
+  font-size: 0.72rem;
+  color: #45534f;
+  min-width: 90px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.dist-barra-wrap {
+  flex: 1;
+  height: 6px;
+  background: #e6f6f3;
+  border-radius: 99px;
+  overflow: hidden;
+}
+
+.dist-barra {
+  height: 100%;
+  background: #01907e;
+  border-radius: 99px;
+  transition: width 0.4s ease;
+  min-width: 2px;
+}
+
+.dist-count {
+  font-size: 0.72rem;
+  font-weight: 600;
+  color: #016a5b;
+  min-width: 20px;
+  text-align: right;
+}
+
+// ── Comentarios ───────────────────────────────────────────────────────────
+.comentarios-seccion {
+  border-top: 1px solid #e6f6f3;
+  padding-top: 1.25rem;
+}
+
+.comentarios-titulo {
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: #1f2d29;
+  margin: 0 0 0.75rem;
+}
+
+.comentario-item {
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: 0.75rem;
+  background: #f8fffe;
+  border-left: 3px solid #58c6b6;
+  padding: 0.6rem 0.9rem;
+  border-radius: 0 8px 8px 0;
+
+  i { color: #58c6b6; font-size: 1rem; flex-shrink: 0; margin-top: 2px; }
+  p { font-size: 0.82rem; color: #45534f; margin: 0; line-height: 1.5; }
+}
+
+// ── Spinner pequeño ────────────────────────────────────────────────────────
+.spinner-sm {
+  width: 14px;
+  height: 14px;
+  border: 2px solid rgba(255,255,255,0.3);
+  border-top-color: #fff;
+  border-radius: 50%;
+  animation: spin 0.7s linear infinite;
+  display: inline-block;
+}
+
+@media (max-width: 600px) {
+  .maestros-grid { grid-template-columns: 1fr; }
+  .modal-overlay { padding: 1rem 0.5rem; }
+}
+
+// ── Calificación en tarjeta de maestro ────────────────────────────────────
+.maestro-calificacion {
+  display: flex;
+  align-items: baseline;
+  gap: 1px;
+  flex-shrink: 0;
+
+  .cal-valor {
+    font-size: 1.1rem;
+    font-weight: 800;
+    line-height: 1;
+  }
+
+  .cal-label {
+    font-size: 0.7rem;
+    font-weight: 600;
+    color: #45534f;
+  }
+}
+
+// ── Promedio badge corregido ───────────────────────────────────────────────
+.promedio-badge {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 0.9rem 2rem;
+  border-radius: 14px;
+  margin-bottom: 1.5rem;
+
+  .promedio-valor {
+    font-size: 2.2rem;
+    font-weight: 800;
+    color: #fff;
+    line-height: 1;
+  }
+
+  .promedio-sub {
+    font-size: 0.85rem;
+    color: rgba(255,255,255,0.8);
+    font-weight: 600;
+    margin-bottom: 2px;
+  }
+
+  .promedio-label {
+    font-size: 0.7rem;
+    font-weight: 600;
+    color: rgba(255,255,255,0.85);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    margin-top: 2px;
+  }
+}
+
+// ── Pestañas de materias ──────────────────────────────────────────────────
+.materias-tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-bottom: 1.25rem;
+  padding-bottom: 0.75rem;
+  border-bottom: 1px solid #e6f6f3;
+}
+
+.materia-tab {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  padding: 0.5rem 0.9rem;
+  border-radius: 10px;
+  border: 1.5px solid #b2d8d2;
+  background: transparent;
+  cursor: pointer;
+  transition: all 0.18s ease;
+  min-width: 140px;
+
+  &:hover { border-color: #01907e; background: rgba(1,144,126,0.04); }
+
+  &.active {
+    background: #01907e;
+    border-color: #01907e;
+
+    .tab-materia, .tab-grupo { color: #fff; }
+    .tab-cal { color: rgba(255,255,255,0.9) !important; }
+  }
+}
+
+.tab-materia {
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: #1f2d29;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 160px;
+}
+
+.tab-grupo {
+  font-size: 0.7rem;
+  color: #45534f;
+}
+
+.tab-cal {
+  font-size: 0.82rem;
+  font-weight: 700;
+  margin-top: 2px;
+}
+
+// ── Banner info de materia ────────────────────────────────────────────────
+.materia-info-banner {
+  display: flex;
+  align-items: center;
+  background: #e6f6f3;
+  border-radius: 10px;
+  padding: 0.6rem 1rem;
+  margin-bottom: 1rem;
+  font-size: 0.875rem;
+  color: #1f2d29;
+}
+
+.badge-cal-mat {
+  margin-left: auto;
+  color: #fff;
+  padding: 2px 10px;
+  border-radius: 99px;
+  font-size: 0.78rem;
+  font-weight: 700;
+}

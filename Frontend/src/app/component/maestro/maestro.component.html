@@ -1,0 +1,40 @@
+<div class="row mt-4">
+    <div class="col-12">
+      <div class="page-breadcrumb">
+        <div class="d-md-flex align-items-center">
+          <div class="ms-auto">
+           
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <div class="container">
+    <div class="cards">
+      <div class="card">
+        <h3>Estudiantes Que Han Completado La Evaluación</h3>
+        <div class="content">
+          <p>Estudiantes:</p>
+          <p>{{estudiantesCompletados}}/{{totalEstudiantes}} Estudiantes Han Contestado</p>
+        </div>
+      </div>
+  
+      <div class="card">
+        <h3>Desempeño</h3>
+        <p>Porcentaje de Desempeño:</p>
+        <div class="chart-container">
+          <div class="pie-chart">
+            <div class="slice slice-actual" [style.transform]="'rotate(' + (0) + 'deg)'"></div>
+            <div class="slice slice-restante" [style.transform]="'rotate(' + (desempenoActual * 3.6) + 'deg)'"></div>
+          </div>
+          <div class="desempeno-info">
+            <p><span class="dot dark-green"></span> Desempeño Hasta Ahora: {{desempenoActual}}%</p>
+            <p><span class="dot light-green"></span> Desempeño Restante: {{desempenoRestante}}%</p>
+          </div>
+        </div> 
+      </div>
+    </div>
+  
+    <button class="cuestionario-button">Cuestionario</button>
+  </div>

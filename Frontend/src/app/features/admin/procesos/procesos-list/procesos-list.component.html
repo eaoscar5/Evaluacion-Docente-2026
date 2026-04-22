@@ -1,0 +1,193 @@
+<div class="container mt-4">
+
+  <!-- Encabezado -->
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+      <h3 class="mb-0">Procesos de Evaluación</h3>
+      <small class="text-muted">Gestiona los periodos de evaluación docente</small>
+    </div>
+    <button class="btn btn-primary" (click)="abrirModal()">
+      <i class="bi bi-plus-lg me-1"></i> Nuevo Proceso
+    </button>
+  </div>
+
+  <!-- Cargando -->
+  <div class="text-center py-5" *ngIf="loading">
+    <div class="spinner-border text-primary" role="status"></div>
+    <p class="mt-2 text-muted">Cargando procesos…</p>
+  </div>
+
+  <!-- Error global -->
+  <div class="alert alert-danger" *ngIf="errorMsg && !showModal">{{ errorMsg }}</div>
+
+  <!-- Sin datos -->
+  <div class="alert alert-info" *ngIf="!loading && !errorMsg && procesos.length === 0">
+    No hay procesos registrados. Crea el primero con el botón <strong>+ Nuevo Proceso</strong>.
+  </div>
+
+  <!-- Tabla -->
+  <div class="card shadow" *ngIf="!loading && procesos.length > 0">
+    <div class="card-body p-0">
+      <div class="table-responsive">
+        <table class="table table-striped align-middle mb-0">
+          <thead class="table-light">
+            <tr>
+              <th>Nombre</th>
+              <th>Año</th>
+              <th>Periodo</th>
+              <th>Instrumento</th>
+              <th>Fecha Inicio</th>
+              <th>Fecha Fin</th>
+              <th>Estado</th>
+              <th class="text-center">Acciones</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let p of procesos">
+              <td><strong>{{ p.nombre }}</strong></td>
+              <td>{{ p.anio }}</td>
+              <td>{{ periodoLabel(p.periodo) }}</td>
+              <td>
+                <span *ngIf="p.nombreInstrumento" class="badge bg-light text-dark border">
+                  {{ p.nombreInstrumento }}
+                </span>
+                <span *ngIf="!p.nombreInstrumento" class="text-muted small">Sin instrumento</span>
+              </td>
+              <td>{{ p.fechaInicio | date:'dd/MM/yyyy' }}</td>
+              <td>{{ p.fechaFin   | date:'dd/MM/yyyy' }}</td>
+              <td>
+                <span class="badge" [ngClass]="{
+                  'bg-success':   p.activo,
+                  'bg-secondary': !p.activo
+                }">
+                  {{ p.activo ? 'Activo' : 'Cerrado' }}
+                </span>
+              </td>
+              <td class="text-center">
+                <button
+                  class="btn btn-sm btn-outline-success me-1"
+                  (click)="activar(p.id)"
+                  [disabled]="p.activo"
+                  title="Activar">
+                  <i class="bi bi-play-fill"></i>
+                </button>
+                <button
+                  class="btn btn-sm btn-outline-danger"
+                  (click)="cerrar(p.id)"
+                  [disabled]="!p.activo"
+                  title="Cerrar">
+                  <i class="bi bi-stop-fill"></i>
+                </button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- MODAL CREAR PROCESO -->
+<div class="modal fade show d-block" tabindex="-1" *ngIf="showModal" style="background:rgba(0,0,0,.4)">
+  <div class="modal-dialog">
+    <div class="modal-content">
+
+      <div class="modal-header">
+        <h5 class="modal-title">Nuevo Proceso</h5>
+        <button class="btn-close" (click)="cerrarModal()"></button>
+      </div>
+
+      <div class="modal-body">
+
+        <!-- Error dentro del modal -->
+        <div class="alert alert-danger py-2" *ngIf="errorMsg">{{ errorMsg }}</div>
+
+        <p class="text-muted small mb-3">
+          <i class="bi bi-info-circle me-1"></i>
+          El nombre del proceso se genera automáticamente (ej. <em>Oficial 1 2026</em>).
+        </p>
+
+        <form [formGroup]="formProceso">
+
+          <div class="row">
+            <div class="col-6 mb-3">
+              <label class="form-label">Año <span class="text-danger">*</span></label>
+              <input
+                class="form-control"
+                type="number"
+                formControlName="anio"
+                placeholder="2026"
+                [class.is-invalid]="formProceso.get('anio')?.invalid && formProceso.get('anio')?.touched">
+              <div class="invalid-feedback">Ingresa un año válido.</div>
+            </div>
+            <div class="col-6 mb-3">
+              <label class="form-label">Periodo <span class="text-danger">*</span></label>
+              <select
+                class="form-select"
+                formControlName="periodo"
+                [class.is-invalid]="formProceso.get('periodo')?.invalid && formProceso.get('periodo')?.touched">
+                <option value="" disabled>Selecciona…</option>
+                <option [value]="1">Sep - Dic</option>
+                <option [value]="2">Ene - Abr</option>
+                <option [value]="3">May - Ago</option>
+              </select>
+              <div class="invalid-feedback">Selecciona un periodo.</div>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col-6 mb-3">
+              <label class="form-label">Fecha Inicio <span class="text-danger">*</span></label>
+              <input
+                class="form-control"
+                type="date"
+                formControlName="fechaInicio"
+                [class.is-invalid]="formProceso.get('fechaInicio')?.invalid && formProceso.get('fechaInicio')?.touched">
+              <div class="invalid-feedback">Selecciona la fecha de inicio.</div>
+            </div>
+            <div class="col-6 mb-3">
+              <label class="form-label">Fecha Fin <span class="text-danger">*</span></label>
+              <input
+                class="form-control"
+                type="date"
+                formControlName="fechaFin"
+                [class.is-invalid]="formProceso.get('fechaFin')?.invalid && formProceso.get('fechaFin')?.touched">
+              <div class="invalid-feedback">Selecciona la fecha de fin.</div>
+            </div>
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label">Instrumento de evaluación <span class="text-danger">*</span></label>
+            <select
+              class="form-select"
+              formControlName="instrumentoId"
+              [class.is-invalid]="formProceso.get('instrumentoId')?.invalid && formProceso.get('instrumentoId')?.touched">
+              <option value="" disabled>Selecciona un instrumento…</option>
+              <option *ngFor="let i of instrumentos" [value]="i.id">{{ i.nombre }}</option>
+            </select>
+            <div class="invalid-feedback">Selecciona un instrumento.</div>
+            <div class="form-text text-muted" *ngIf="instrumentos.length === 0">
+              <i class="bi bi-exclamation-triangle me-1"></i>
+              No hay instrumentos disponibles.
+              <a routerLink="/instrumentos" (click)="cerrarModal()">Crear uno</a>.
+            </div>
+          </div>
+
+        </form>
+      </div>
+
+      <div class="modal-footer">
+        <button class="btn btn-secondary" (click)="cerrarModal()">Cancelar</button>
+        <button
+          class="btn btn-primary"
+          (click)="crear()"
+          [disabled]="formProceso.invalid || guardando">
+          <span *ngIf="guardando" class="spinner-border spinner-border-sm me-1"></span>
+          {{ guardando ? 'Guardando…' : 'Guardar' }}
+        </button>
+      </div>
+
+    </div>
+  </div>
+</div>

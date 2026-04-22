@@ -1,0 +1,107 @@
+<div class="row mt-4"></div>
+<div class="col-12">
+  <div class="page-breadcrumb">
+    <div class="d-md-flex align-items-center">
+      <h3 class="page-title">Resultados</h3>
+      <div class="ms-auto">
+        <nav aria-label="breadcrumb">
+          <ol class="breadcrumb">
+            <li class="breadcrumb-item" tabindex="0">
+              <a href="javascript:void(0)">Componente</a>
+            </li>
+            <li class="breadcrumb-item active">Resultados</li>
+          </ol>
+        </nav>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div>
+  <div class="card mt-4">
+    <div class="card-body">
+      <h4 class="card-title"></h4>
+      <hr />
+      <div class="d-flex flex-wrap mb-3 mt-3">
+        <!-- Buscador de Maestros -->
+        <input
+          type="text"
+          placeholder="Buscar Maestro..."
+          class="form-control w-25 mb-2 mb-md-0"
+          [(ngModel)]="nombreBusqueda"
+          (input)="buscarMaestro()"
+        />
+
+        <!-- Botón para seleccionar/deseleccionar todo -->
+        <button
+          class="btn btn-selectAll ms-auto mb-2 mb-md-0 mt-1"
+          (click)="seleccionarTodo()"
+        >
+          <i class="fa fa-list-ul" aria-hidden="true"></i>
+          {{ selectedCards.length === maestros.length ? 'Deseleccionar Todo' : 'Seleccionar Todo' }}
+        </button>
+
+        <!-- Botón para descargar -->
+        <button class="btn btn-descargar ms-1 mb-2 mb-md-0 mt-1">
+          <i class="fas fa-download"></i> Descargar
+        </button>
+
+        <!-- Botón para actualizar -->
+        <button class="btn btn-actualizar ms-1 mb-2 mb-md-0 mt-1" (click)="actualizar()">
+          <i class="fas fa-sync-alt"></i> Actualizar
+        </button>
+
+        <!-- Selector de Carrera -->
+        <select
+          class="form-control w-auto ms-1 mb-2 mb-md-0 mt-1"
+          [(ngModel)]="selectedCarrera"
+          (change)="obtenerMaestros()"
+        >
+          <option selected disabled>Carrera:</option>
+          <option *ngFor="let carrera of carreras" [ngValue]="carrera.code">
+            {{ carrera.name }}
+          </option>
+        </select>
+
+        <!-- Selector de Período -->
+        <select
+          class="form-control w-auto ms-1 mb-2 mb-md-0 mt-1"
+          [(ngModel)]="selectedPeriodo"
+          (change)="obtenerMaestros()"
+        >
+          <option selected disabled>Período:</option>
+          <option *ngFor="let periodo of periodos" [ngValue]="periodo.codeP">
+            {{ periodo.nameP }}
+          </option>
+        </select>
+      </div>
+
+
+<!-- resultados.component.html -->
+<div class="cards-container">
+  <div *ngFor="let usuario of resultadosBusqueda" class="p-card p-component custom-card">
+    <div class="p-card-body">
+      <div class="p-card-content">
+        <h3>{{ usuario.nombre }}</h3>
+        <p><strong>ID de Empleado:</strong> {{ usuario.id }}</p>
+        <p><strong>Calificación:</strong> {{ usuario.calificacion }}</p>
+        <p><strong>Carrera:</strong> {{ usuario.carrera }}</p>
+
+        <div class="button-group">
+          <button pButton type="button" label="Descargar" class="p-button-sm p-button-primary"></button>
+          <button pButton type="button" label="Compartir" class="p-button-sm p-button-warning"></button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+
+
+    
+   
+
+<!-- Contenedor para mensajes de PrimeNG -->
+<p-toast></p-toast>

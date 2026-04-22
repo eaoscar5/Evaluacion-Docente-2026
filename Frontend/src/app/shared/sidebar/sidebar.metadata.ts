@@ -1,0 +1,11 @@
+// Sidebar route metadata interface
+export interface RouteInfo {
+  path: string;
+  title: string;
+  icon: string;
+  class: string;
+  extralink: boolean;
+  role?: string[];
+  permissions?: string[];
+  submenu: RouteInfo[];
+}

@@ -1,0 +1,206 @@
+<div class="container mt-4 usuarios-page">
+  <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-3">
+    <div>
+      <h3 class="mb-0">Usuarios Administrativos</h3>
+      <small class="text-muted">Gestiona cuentas, roles y privilegios del panel administrativo.</small>
+    </div>
+    <button class="btn btn-primary" (click)="abrirCrear()">
+      <i class="bi bi-person-plus me-1"></i> Nuevo usuario
+    </button>
+  </div>
+
+  <div class="card shadow-sm mb-4">
+    <div class="card-body">
+      <div class="row g-2 align-items-end">
+        <div class="col-md-8">
+          <label class="form-label mb-1">Buscar usuario</label>
+          <input
+            class="form-control"
+            [(ngModel)]="searchTerm"
+            type="text"
+            placeholder="Ej. administrador, gestor.academico"
+            (keyup.enter)="buscar()">
+        </div>
+        <div class="col-md-4 d-flex gap-2">
+          <button class="btn btn-outline-primary flex-fill" (click)="buscar()">
+            <i class="bi bi-search me-1"></i> Buscar
+          </button>
+          <button class="btn btn-outline-secondary" (click)="limpiarBusqueda()" [disabled]="!searchTerm">
+            Limpiar
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="text-center py-5" *ngIf="loading">
+    <div class="spinner-border text-primary" role="status"></div>
+    <p class="mt-2 text-muted mb-0">Cargando usuarios…</p>
+  </div>
+
+  <div class="alert alert-danger" *ngIf="errorMsg">{{ errorMsg }}</div>
+
+  <div class="alert alert-info" *ngIf="!loading && !errorMsg && usuarios.length === 0">
+    No hay usuarios administrativos registrados con los filtros actuales.
+  </div>
+
+  <div class="card shadow-sm" *ngIf="!loading && usuarios.length > 0">
+    <div class="card-body p-0">
+      <div class="table-responsive">
+        <table class="table align-middle mb-0">
+          <thead class="table-light">
+            <tr>
+              <th>Usuario</th>
+              <th>Rol</th>
+              <th>Estado</th>
+              <th>Privilegios</th>
+              <th>Creado</th>
+              <th>Actualizado</th>
+              <th class="text-center">Acciones</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let usuario of usuarios; trackBy: trackById">
+              <td>
+                <strong>{{ usuario.username }}</strong>
+              </td>
+              <td>
+                <span class="badge rounded-pill" [ngClass]="usuario.rol === 'Admin' ? 'bg-dark' : 'bg-primary'">
+                  {{ usuario.rol }}
+                </span>
+              </td>
+              <td>
+                <span class="badge rounded-pill" [ngClass]="usuario.activo ? 'bg-success' : 'bg-secondary'">
+                  {{ usuario.activo ? 'Activo' : 'Inactivo' }}
+                </span>
+              </td>
+              <td>
+                <div class="d-flex flex-wrap gap-1" *ngIf="permisosActivos(usuario).length > 0; else sinPermisos">
+                  <span class="badge text-dark bg-light border" *ngFor="let permiso of permisosActivos(usuario)">
+                    {{ permiso }}
+                  </span>
+                </div>
+                <ng-template #sinPermisos>
+                  <span class="text-muted small">Sin privilegios asignados</span>
+                </ng-template>
+              </td>
+              <td>{{ usuario.fechaCreacion | date:'dd/MM/yyyy HH:mm' }}</td>
+              <td>{{ usuario.fechaActualizacion | date:'dd/MM/yyyy HH:mm' }}</td>
+              <td class="text-center">
+                <button class="btn btn-sm btn-outline-primary me-1" (click)="abrirEditar(usuario)" title="Editar">
+                  <i class="bi bi-pencil"></i>
+                </button>
+                <button class="btn btn-sm btn-outline-danger" (click)="eliminar(usuario)" title="Eliminar">
+                  <i class="bi bi-trash"></i>
+                </button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade show d-block" tabindex="-1" *ngIf="showModal" style="background: rgba(15, 23, 42, .45);">
+  <div class="modal-dialog modal-lg modal-dialog-scrollable">
+    <div class="modal-content">
+      <div class="modal-header border-0 pb-0">
+        <div>
+          <h5 class="modal-title mb-1">{{ editingUser ? 'Editar usuario' : 'Nuevo usuario administrativo' }}</h5>
+          <small class="text-muted">
+            {{ editingUser ? 'Actualiza rol, estado y privilegios.' : 'Crea cuentas para personal con acceso al panel.' }}
+          </small>
+        </div>
+        <button class="btn-close" (click)="cerrarModal()"></button>
+      </div>
+
+      <div class="modal-body pt-3">
+        <div class="alert alert-danger py-2" *ngIf="modalErrorMsg">{{ modalErrorMsg }}</div>
+
+        <form [formGroup]="form" class="row g-3">
+          <div class="col-md-6">
+            <label class="form-label">Usuario <span class="text-danger">*</span></label>
+            <input
+              class="form-control"
+              formControlName="username"
+              type="text"
+              placeholder="usuario.admin"
+              [class.is-invalid]="form.get('username')?.invalid && form.get('username')?.touched">
+            <div class="invalid-feedback">Ingresa un nombre de usuario válido.</div>
+          </div>
+
+          <div class="col-md-6">
+            <label class="form-label">
+              Contraseña <span class="text-danger" *ngIf="!editingUser">*</span>
+            </label>
+            <input
+              class="form-control"
+              formControlName="password"
+              type="password"
+              [placeholder]="editingUser ? 'Déjala vacía para conservar la actual' : 'Mínimo 6 caracteres'"
+              [class.is-invalid]="form.get('password')?.invalid && form.get('password')?.touched">
+            <div class="invalid-feedback">La contraseña debe tener al menos 6 caracteres.</div>
+          </div>
+
+          <div class="col-md-6">
+            <label class="form-label">Rol <span class="text-danger">*</span></label>
+            <select class="form-select" formControlName="rol">
+              <option value="Gestor">Gestor</option>
+              <option value="Admin">Admin</option>
+            </select>
+            <div class="form-text text-muted">
+              El rol Admin recibe automáticamente todos los privilegios.
+            </div>
+          </div>
+
+          <div class="col-md-6">
+            <label class="form-label d-block">Estado</label>
+            <div class="form-check form-switch mt-2">
+              <input class="form-check-input" formControlName="activo" type="checkbox" id="activoSwitch">
+              <label class="form-check-label" for="activoSwitch">
+                {{ form.get('activo')?.value ? 'Usuario activo' : 'Usuario inactivo' }}
+              </label>
+            </div>
+          </div>
+
+          <div class="col-12">
+            <div class="permissions-card border rounded-3 p-3">
+              <div class="d-flex justify-content-between align-items-center flex-wrap gap-2 mb-2">
+                <div>
+                  <h6 class="mb-0">Privilegios del panel</h6>
+                  <small class="text-muted">Define a qué módulos podrá entrar este usuario.</small>
+                </div>
+                <span class="badge bg-warning text-dark" *ngIf="isAdminSelected()">Todos activos por rol Admin</span>
+              </div>
+
+              <div class="row g-3">
+                <div class="col-md-6" *ngFor="let permiso of permisos">
+                  <label class="permission-item border rounded-3 p-3 w-100">
+                    <div class="form-check m-0">
+                      <input
+                        class="form-check-input"
+                        type="checkbox"
+                        [formControlName]="permiso.control"
+                        [id]="permiso.control">
+                      <span class="form-check-label fw-semibold ms-2">{{ permiso.label }}</span>
+                    </div>
+                    <small class="text-muted d-block mt-2">{{ permiso.hint }}</small>
+                  </label>
+                </div>
+              </div>
+            </div>
+          </div>
+        </form>
+      </div>
+
+      <div class="modal-footer border-0 pt-0">
+        <button class="btn btn-secondary" (click)="cerrarModal()">Cancelar</button>
+        <button class="btn btn-primary" (click)="guardar()" [disabled]="saving">
+          <span class="spinner-border spinner-border-sm me-1" *ngIf="saving"></span>
+          {{ saving ? 'Guardando…' : (editingUser ? 'Guardar cambios' : 'Crear usuario') }}
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

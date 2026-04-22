@@ -1,0 +1,392 @@
+// ── Paleta UTS ────────────────────────────────────────────────────────────
+.evaluar-root {
+  min-height: 100vh;
+  background: #e6f6f3;
+  font-family: 'Outfit', 'Segoe UI', sans-serif;
+  color: #1f2d29;
+}
+
+// ── Header ────────────────────────────────────────────────────────────────
+.evaluar-header {
+  background: #ffffff;
+  border-bottom: 2px solid #b2d8d2;
+  padding: 0.9rem 2rem;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  box-shadow: 0 2px 12px rgba(1, 144, 126, 0.08);
+}
+
+.btn-volver {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  border: 1.5px solid #b2d8d2;
+  background: transparent;
+  color: #45534f;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  flex-shrink: 0;
+  transition: all 0.18s ease;
+
+  &:hover { background: #e6f6f3; border-color: #01907e; color: #01907e; }
+}
+
+.header-info {
+  flex: 1;
+
+  .header-maestro {
+    display: block;
+    font-weight: 700;
+    font-size: 0.95rem;
+    color: #1f2d29;
+  }
+
+  .header-materia {
+    display: block;
+    font-size: 0.78rem;
+    color: #45534f;
+  }
+}
+
+.progreso-wrap {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  flex-shrink: 0;
+}
+
+.progreso-bar {
+  width: 120px;
+  height: 6px;
+  background: #e6f6f3;
+  border-radius: 99px;
+  overflow: hidden;
+}
+
+.progreso-fill {
+  height: 100%;
+  background: #01907e;
+  border-radius: 99px;
+  transition: width 0.3s ease;
+}
+
+.progreso-label {
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: #01907e;
+  white-space: nowrap;
+}
+
+// ── Main ─────────────────────────────────────────────────────────────────
+.evaluar-main {
+  max-width: 760px;
+  margin: 0 auto;
+  padding: 2rem 1.5rem 4rem;
+}
+
+// ── Estados ───────────────────────────────────────────────────────────────
+.estado-cargando {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+  padding: 5rem 0;
+  color: #45534f;
+  p { margin: 0; font-size: 0.9rem; }
+}
+
+.spinner-ring {
+  width: 44px;
+  height: 44px;
+  border: 3px solid rgba(1, 144, 126, 0.15);
+  border-top-color: #01907e;
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin { to { transform: rotate(360deg); } }
+
+.estado-error {
+  text-align: center;
+  padding: 4rem 2rem;
+  color: #45534f;
+
+  i { font-size: 2.5rem; color: #e11d48; opacity: 0.7; }
+  p { margin: 1rem 0; }
+}
+
+.estado-exito {
+  text-align: center;
+  padding: 4rem 2rem;
+
+  .exito-icon i {
+    font-size: 4rem;
+    color: #01907e;
+  }
+
+  h2 {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #1f2d29;
+    margin: 1rem 0 0.5rem;
+  }
+
+  p { color: #45534f; margin: 0 0 0.5rem; }
+
+  .exito-clave {
+    display: inline-block;
+    background: rgba(1, 144, 126, 0.08);
+    border: 1px solid #b2d8d2;
+    border-radius: 8px;
+    padding: 0.5rem 1.25rem;
+    margin: 1rem 0 1.5rem;
+    font-size: 0.9rem;
+
+    strong { color: #01907e; font-size: 1.1rem; }
+  }
+}
+
+// ── Instrumento ───────────────────────────────────────────────────────────
+.instrumento-titulo {
+  margin-bottom: 1.5rem;
+
+  h2 {
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: #1f2d29;
+    margin: 0;
+  }
+}
+
+// ── Categoría ─────────────────────────────────────────────────────────────
+.categoria-bloque {
+  background: #ffffff;
+  border: 1px solid #b2d8d2;
+  border-radius: 16px;
+  padding: 1.5rem;
+  margin-bottom: 1.25rem;
+  box-shadow: 0 2px 12px rgba(1, 144, 126, 0.05);
+}
+
+.categoria-titulo {
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: #01907e;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  margin: 0 0 1.25rem;
+  padding-bottom: 0.75rem;
+  border-bottom: 1px solid #e6f6f3;
+}
+
+// ── Pregunta ──────────────────────────────────────────────────────────────
+.pregunta-item {
+  margin-bottom: 1.5rem;
+
+  &:last-child { margin-bottom: 0; }
+}
+
+.pregunta-texto {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #1f2d29;
+  margin: 0 0 0.75rem;
+  line-height: 1.5;
+}
+
+.pregunta-num {
+  color: #01907e;
+  font-weight: 700;
+  margin-right: 4px;
+}
+
+// ── Opciones ──────────────────────────────────────────────────────────────
+.opciones-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.opcion-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 0.45rem 0.9rem;
+  border: 1.5px solid #b2d8d2;
+  border-radius: 8px;
+  background: transparent;
+  color: #45534f;
+  font-size: 0.82rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.15s ease;
+
+  .opcion-valor {
+    font-weight: 700;
+    color: #01907e;
+    font-size: 0.85rem;
+  }
+
+  &:hover {
+    border-color: #01907e;
+    background: rgba(1, 144, 126, 0.05);
+  }
+
+  &.opcion-selected {
+    background: #01907e;
+    border-color: #01907e;
+    color: #ffffff;
+
+    .opcion-valor { color: #ffffff; }
+  }
+}
+
+// ── Respuesta abierta ─────────────────────────────────────────────────────
+.respuesta-abierta {
+  width: 100%;
+  border: 1.5px solid #b2d8d2;
+  border-radius: 10px;
+  padding: 0.6rem 0.9rem;
+  font-size: 0.875rem;
+  color: #1f2d29;
+  background: #f8fffe;
+  resize: vertical;
+  outline: none;
+  transition: border-color 0.18s ease, box-shadow 0.18s ease;
+
+  &:focus {
+    border-color: #01907e;
+    box-shadow: 0 0 0 3px rgba(1, 144, 126, 0.1);
+  }
+}
+
+// ── Comentario ────────────────────────────────────────────────────────────
+.comentario-bloque {
+  background: #ffffff;
+  border: 1px solid #b2d8d2;
+  border-radius: 16px;
+  padding: 1.5rem;
+  margin-bottom: 1.25rem;
+  box-shadow: 0 2px 12px rgba(1, 144, 126, 0.05);
+}
+
+.comentario-label {
+  display: block;
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: #1f2d29;
+  margin-bottom: 0.75rem;
+}
+
+.comentario-input {
+  width: 100%;
+  border: 1.5px solid #b2d8d2;
+  border-radius: 10px;
+  padding: 0.6rem 0.9rem;
+  font-size: 0.875rem;
+  color: #1f2d29;
+  background: #f8fffe;
+  resize: vertical;
+  outline: none;
+  transition: border-color 0.18s ease, box-shadow 0.18s ease;
+
+  &:focus {
+    border-color: #01907e;
+    box-shadow: 0 0 0 3px rgba(1, 144, 126, 0.1);
+  }
+}
+
+// ── Alerta error ──────────────────────────────────────────────────────────
+.alerta-error {
+  background: #fff1f2;
+  border: 1px solid #fecdd3;
+  border-radius: 10px;
+  padding: 0.75rem 1rem;
+  color: #e11d48;
+  font-size: 0.875rem;
+  margin-bottom: 1rem;
+}
+
+// ── Footer enviar ─────────────────────────────────────────────────────────
+.enviar-footer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.75rem;
+  padding-top: 0.5rem;
+}
+
+.enviar-hint {
+  font-size: 0.82rem;
+  color: #45534f;
+  margin: 0;
+  text-align: center;
+}
+
+.btn-enviar {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: #01907e;
+  color: #ffffff;
+  border: none;
+  border-radius: 10px;
+  padding: 0.75rem 2.5rem;
+  font-size: 0.9rem;
+  font-weight: 700;
+  cursor: pointer;
+  box-shadow: 0 4px 16px rgba(1, 144, 126, 0.3);
+  transition: background 0.18s ease, transform 0.15s ease;
+
+  &:hover:not(:disabled) {
+    background: #016a5b;
+    transform: translateY(-1px);
+  }
+
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    box-shadow: none;
+  }
+}
+
+.spinner-sm {
+  width: 16px;
+  height: 16px;
+  border: 2px solid rgba(255,255,255,0.3);
+  border-top-color: #fff;
+  border-radius: 50%;
+  animation: spin 0.7s linear infinite;
+  display: inline-block;
+}
+
+// ── Botón acción genérico ────────────────────────────────────────────────
+.btn-accion {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: #01907e;
+  color: #fff;
+  border: none;
+  border-radius: 10px;
+  padding: 0.65rem 1.5rem;
+  font-size: 0.875rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.18s ease;
+
+  &:hover { background: #016a5b; }
+}
+
+@media (max-width: 600px) {
+  .evaluar-main { padding: 1rem 1rem 3rem; }
+  .progreso-wrap { display: none; }
+  .opciones-grid { flex-direction: column; }
+  .opcion-btn { width: 100%; }
+}

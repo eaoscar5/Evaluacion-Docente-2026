@@ -1,0 +1,82 @@
+<div class="container mt-4">
+
+  <!-- Encabezado -->
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+      <h3 class="mb-0">Instrumentos de Evaluación</h3>
+      <small class="text-muted">Gestiona los cuestionarios del sistema</small>
+    </div>
+    <a routerLink="/nuevoinstrumento" class="btn btn-primary">
+      <i class="bi bi-plus-lg me-1"></i> Nuevo Instrumento
+    </a>
+  </div>
+
+  <!-- Cargando -->
+  <div class="text-center py-5" *ngIf="loading">
+    <div class="spinner-border text-primary" role="status"></div>
+    <p class="mt-2 text-muted">Cargando instrumentos…</p>
+  </div>
+
+  <!-- Error -->
+  <div class="alert alert-danger" *ngIf="errorMsg">{{ errorMsg }}</div>
+
+  <!-- Sin datos -->
+  <div class="alert alert-info" *ngIf="!loading && !errorMsg && instrumentos.length === 0">
+    No hay instrumentos registrados. Crea el primero con el botón <strong>+ Nuevo Instrumento</strong>.
+  </div>
+
+  <!-- Tabla -->
+  <div class="card shadow" *ngIf="!loading && instrumentos.length > 0">
+    <div class="card-body p-0">
+      <div class="table-responsive">
+        <table class="table table-striped align-middle mb-0">
+          <thead class="table-light">
+            <tr>
+              <th>#</th>
+              <th>Nombre</th>
+              <th>Tipo</th>
+              <th>Categorías</th>
+              <th>Plantilla</th>
+              <th class="text-center">Acciones</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let inst of instrumentos">
+              <td class="text-muted small">{{ inst.id }}</td>
+              <td><strong>{{ inst.nombre }}</strong></td>
+              <td>
+                <span class="badge bg-secondary badge-contraste-negro">{{ tipoLabel(inst.tipoInstrumento) }}</span>
+              </td>
+              <td>
+                <span class="badge bg-light text-dark border">
+                  {{ inst.categorias.length }} categorías
+                </span>
+              </td>
+              <td>
+                <span *ngIf="inst.esPlantilla" class="badge bg-teal badge-contraste-negro">
+                  <i class="bi bi-bookmark-fill me-1"></i>Plantilla
+                </span>
+                <span *ngIf="!inst.esPlantilla" class="text-muted small">—</span>
+              </td>
+              <!-- Columna "Proceso" eliminada — el proceso ahora referencia al instrumento, no al revés -->
+              <td class="text-center">
+                <a [routerLink]="['/instrumentos', inst.id]" class="btn btn-sm btn-outline-info me-1"
+                  title="Ver detalle">
+                  <i class="bi bi-eye"></i>
+                </a>
+                <a [routerLink]="['/instrumentos', inst.id, 'editar']" class="btn btn-sm btn-outline-warning me-1"
+                  title="Editar">
+                  <i class="bi bi-pencil"></i>
+                </a>
+                <button class="btn btn-sm btn-outline-danger" (click)="eliminar(inst.id, inst.nombre)" title="Eliminar">
+                  <i class="bi bi-trash"></i>
+                </button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+</div>
